@@ -94,6 +94,7 @@ config FB_S3C_TL2796
         ---help---
           This enables support for Samsung TL2796 WVGA LCD panel
 
+<<<<<<< HEAD
 config FB_VOODOO
         bool "Voodoo Color"
         depends on FB_S3C_TL2796
@@ -123,6 +124,23 @@ config VOODOO_MDNIE_VIDEOS_ALT_PRESETS
         ---help---
           This enables voodoo color mDNIe useful alternative presets used by Samsung video player
 
+=======
+config FB_VOODOO
+        bool "Voodoo Color"
+        depends on FB_S3C_TL2796
+        default y
+        ---help---
+          This enables support Voodoo color mods
+   
+config FB_VOODOO_DEBUG_LOG
+        bool "Verbose Super AMOLED driver logs"
+        depends on FB_VOODOO
+        default n
+        ---help---
+          Logging for developers
+          Super AMOLED hardware command decoding and driver calculations
+
+>>>>>>> 90da0f3... Add voodoo color.
 config FB_S3C_S6D16A0X
         bool "S6D16A0X"
         depends on FB_S3C

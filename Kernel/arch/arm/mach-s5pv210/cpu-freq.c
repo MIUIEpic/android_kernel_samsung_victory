@@ -194,6 +194,18 @@ static struct s3c_freq clk_info[] = {
 	},
 };
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_LIVE_OC
+extern void cpufreq_stats_reset(void);
+
+static unsigned long sleep_freq, original_dmc0_reg;
+static unsigned long original_fclk[sizeof(clk_info) /  sizeof(struct s3c_freq)];
+
+static int dividers[sizeof(clk_info) /  sizeof(struct s3c_freq)];
+#endif
+
+>>>>>>> 81173d5... The DRAM frequency is also scaled according to the OC value.
 static int s5pv210_cpufreq_verify_speed(struct cpufreq_policy *policy)
 {
 	if (policy->cpu)
@@ -722,6 +734,191 @@ static int s5pv210_cpufreq_resume(struct cpufreq_policy *policy)
 }
 #endif
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_LIVE_OC
+static int find_divider(int freq)
+{
+    int i, divider;
+
+    divider = 24;
+
+    if (freq % 3 == 0) {
+	freq /= 3;
+	divider /= 3;
+    }
+ 
+    for (i = 0; i < 3; i++) {
+	if (freq % 2 == 0) {
+	    freq /= 2;
+	    divider /= 2;
+	}
+    }
+
+    return divider;
+}
+
+static void liveoc_init(void)
+{
+    int i, index;
+
+    i = 0;
+
+    while (freq_table[i].frequency != CPUFREQ_TABLE_END) {
+	index = freq_table[i].index;
+
+	original_fclk[index] = clk_info[index].fclk;
+	dividers[index] = find_divider(clk_info[index].fclk / 1000);
+
+	sleep_freq = SLEEP_FREQ;
+
+	i++;
+    }
+
+	original_dmc0_reg = backup_dmc0_reg;
+
+    return;
+}
+
+void liveoc_update(unsigned int oc_value)
+{
+    int i, index, index_min = L0, index_max = L0;
+
+    struct cpufreq_policy * policy = cpufreq_cpu_get(0);
+
+    mutex_lock(&set_freq_lock);
+
+    i = 0;
+    apll_freq_max = 0;
+
+    while (freq_table[i].frequency != CPUFREQ_TABLE_END) {
+
+	index = freq_table[i].index;
+	
+	if (clk_info[index].armclk == policy->user_policy.min)
+	    index_min = index;
+
+	if (clk_info[index].armclk == policy->user_policy.max)
+	    index_max = index;
+
+	clk_info[index].fclk = (original_fclk[index] * oc_value) / 100;
+	dividers[index] = find_divider(clk_info[index].fclk / 1000);
+
+	clk_info[index].armclk = clk_info[index].fclk / (clkdiv_val[index][0] + 1);
+	clk_info[index].hclk_msys = clk_info[index].fclk / (clkdiv_val[index][1] + 1);
+	clk_info[index].pclk_msys = clk_info[index].hclk_msys / (clkdiv_val[index][3] + 1);
+
+	freq_table[i].frequency = clk_info[index].armclk;
+
+	if (freq_table[i].frequency > apll_freq_max)
+	    apll_freq_max = freq_table[i].frequency;
+
+	if (original_fclk[index] / (clkdiv_val[index][0] + 1) == SLEEP_FREQ)
+	    sleep_freq = clk_info[index].armclk;
+
+	i++;
+    }
+
+    apll_freq_max /= 1000;
+
+    backup_dmc0_reg = ((original_dmc0_reg * oc_value) / 100) & 0xFFFF;
+
+    cpufreq_frequency_table_cpuinfo(policy, freq_table);
+
+    policy->user_policy.min = freq_table[index_min].frequency;
+    policy->user_policy.max = freq_table[index_max].frequency;  
+
+    mutex_unlock(&set_freq_lock);
+
+    cpufreq_stats_reset();
+
+    return;
+}
+EXPORT_SYMBOL(liveoc_update);
+#endif
+
+#ifdef CONFIG_CUSTOM_VOLTAGE
+static const int num_freqs = sizeof(dvs_conf) / sizeof(struct s5pv210_dvs_conf);
+
+void customvoltage_updatearmvolt(unsigned long * arm_voltages)
+{
+    int i;
+
+    mutex_lock(&set_freq_lock);
+
+    for (i = 0; i < num_freqs; i++) {
+	if (arm_voltages[i] > arm_volt_max)
+	    arm_voltages[i] = arm_volt_max;
+	dvs_conf[i].arm_volt = arm_voltages[i];
+    }
+
+    mutex_unlock(&set_freq_lock);
+
+    return;
+}
+EXPORT_SYMBOL(customvoltage_updatearmvolt);
+
+void customvoltage_updateintvolt(unsigned long * int_voltages)
+{
+    int i;
+
+    mutex_lock(&set_freq_lock);
+
+    for (i = 0; i < num_freqs; i++) {
+	if (int_voltages[i] > int_volt_max)
+	    int_voltages[i] = int_volt_max;
+	dvs_conf[i].int_volt = int_voltages[i];
+    }
+
+    mutex_unlock(&set_freq_lock);
+
+    return;
+}
+EXPORT_SYMBOL(customvoltage_updateintvolt);
+
+void customvoltage_updatemaxvolt(unsigned long * max_voltages)
+{
+    mutex_lock(&set_freq_lock);
+
+    arm_volt_max = max_voltages[0];
+    int_volt_max = max_voltages[1];
+
+    mutex_unlock(&set_freq_lock);
+
+    return;
+}
+EXPORT_SYMBOL(customvoltage_updatemaxvolt);
+
+int customvoltage_numfreqs(void)
+{
+    return num_freqs;
+}
+EXPORT_SYMBOL(customvoltage_numfreqs);
+
+void customvoltage_freqvolt(unsigned long * freqs, unsigned long * arm_voltages,
+			    unsigned long * int_voltages, unsigned long * max_voltages)
+{
+    int i = 0;
+
+    while (freq_table[i].frequency != CPUFREQ_TABLE_END) {
+	freqs[freq_table[i].index] = freq_table[i].frequency;
+	i++;
+    }
+
+    for (i = 0; i < num_freqs; i++) {
+	arm_voltages[i] = dvs_conf[i].arm_volt;
+	int_voltages[i] = dvs_conf[i].int_volt;
+    }
+
+    max_voltages[0] = arm_volt_max;
+    max_voltages[1] = int_volt_max;
+
+    return;
+}
+EXPORT_SYMBOL(customvoltage_freqvolt);
+#endif
+
+>>>>>>> 81173d5... The DRAM frequency is also scaled according to the OC value.
 static int __init s5pv210_cpufreq_driver_init(struct cpufreq_policy *policy)
 {
 	u32 rate ;

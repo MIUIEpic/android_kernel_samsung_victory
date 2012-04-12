@@ -180,6 +180,7 @@ static const struct tl2796_gamma_adj_points gamma_adj_points = {
 .v255 = BV_255,
 };
 
+<<<<<<< HEAD
 static const struct tl2796_gamma_adj_points gamma_adj_points = {
 .v0 = 0,
 .v1 = BV_1,
@@ -190,6 +191,8 @@ static const struct tl2796_gamma_adj_points gamma_adj_points = {
 .v255 = BV_255,
 };
 
+=======
+>>>>>>> c3118fa... Modify Voodoo Color defaults
 #ifdef CONFIG_FB_VOODOO
 struct gamma_entry gamma_table[] = {
 #else
@@ -4571,6 +4574,7 @@ struct s5p_panel_data aries_panel_data = {
 		*/
 		.mult = {
 <<<<<<< HEAD
+<<<<<<< HEAD
 			2318372099U,
 			2117262806U,
 			2117262806U,
@@ -4584,6 +4588,11 @@ struct s5p_panel_data aries_panel_data = {
 			2055448640U,
 			1932735200U,
 			2341779680U,
+=======
+			1870388960U,
+			2332213600U,
+			2921039680U,
+>>>>>>> c3118fa... Modify Voodoo Color defaults
 		},
 		.rshift = 31,
 	},

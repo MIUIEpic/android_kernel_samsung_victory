@@ -59,27 +59,36 @@ struct tl2796_gamma_reg_offsets {
 };
 
 struct s5p_lcd{
-	int ldi_enable;
-	int bl;
-	const struct tl2796_gamma_adj_points *gamma_adj_points;
-	struct tl2796_gamma_reg_offsets gamma_reg_offsets;
-	u32 color_mult[3];
-	struct mutex lock;
-	struct device *dev;
-	struct spi_device *g_spi;
-	struct s5p_panel_data *data;
-	struct backlight_device *bl_dev;
-	struct early_suspend early_suspend;
-	struct dentry *debug_dir;
+    int ldi_enable;
+    int bl;
+    int acl_enable;
+    int cur_acl;
+    int on_19gamma;
+    const struct tl2796_gamma_adj_points *gamma_adj_points;
+    struct mutex	lock;
+    struct device *dev;
+    struct spi_device *g_spi;
+    struct s5p_panel_data	*data;
+    struct backlight_device *bl_dev;
+    struct lcd_device *lcd_dev;
+    struct class *acl_class;
+    struct device *switch_aclset_dev;
+    struct class *gammaset_class;
+    struct device *switch_gammaset_dev;
+    struct device *sec_lcdtype_dev;
+    struct early_suspend    early_suspend;
 };
 
 #ifdef CONFIG_FB_VOODOO
 struct s5p_lcd *lcd_;
 
-u32 original_color_adj_mults[3];
-unsigned int panel_config_sequence = 0;
+u32 original_color_adj_mults[3] = { U32_MAX, U32_MAX, U32_MAX };
 
+<<<<<<< HEAD
 int hacky_v1_offset[3] = {-31, -34, -34};
+=======
+int hacky_v1_offset[3] = {0, 0, 0};
+>>>>>>> c4ea598... A lot of memory stuff... I have no time to explain...
 
 static const u16 s6e63m0_SEQ_ETC_SETTING_SAMSUNG[] = {
 /* ETC Condition Set Command */

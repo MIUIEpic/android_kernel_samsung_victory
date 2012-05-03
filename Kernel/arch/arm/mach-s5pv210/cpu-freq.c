@@ -1002,19 +1002,68 @@ static int __init s5pv210_cpufreq_driver_init(struct cpufreq_policy *policy)
 static int s5pv210_cpufreq_notifier_event(struct notifier_block *this,
 		unsigned long event, void *ptr)
 {
+<<<<<<< HEAD
 	int ret;
 
 	switch (event) {
 	case PM_SUSPEND_PREPARE:
 		ret = cpufreq_driver_target(cpufreq_cpu_get(0), SLEEP_FREQ,
 				DISABLE_FURTHER_CPUFREQ);
+=======
+	static unsigned int orig_min = 0, orig_max = ~0;
+	struct cpufreq_policy *policy;
+	int ret = -EINVAL;
+
+	switch (event) {
+	case PM_SUSPEND_PREPARE:
+		if ((policy = cpufreq_cpu_get(0)) == NULL)
+			goto suspend_no_policy;
+		if (unlikely(lock_policy_rwsem_write(policy->cpu)))
+			goto suspend_lock_fail;
+
+		/* Ensure suspend policy includes SLEEP_FREQ, othewrise may crash. */
+		orig_min    = policy->min;
+		orig_max    = policy->max;
+		policy->min = policy->max = sleep_freq;
+
+		/* Call "internal" version as policy is already locked. */
+		ret = __cpufreq_driver_target(policy, sleep_freq,
+				DISABLE_FURTHER_CPUFREQ);
+
+		unlock_policy_rwsem_write(policy->cpu);
+suspend_lock_fail:
+		cpufreq_cpu_put(policy);
+suspend_no_policy:
+>>>>>>> e615e33... Part 1 of adding in new mkasick patches
 		if (ret < 0)
 			return NOTIFY_BAD;
 		return NOTIFY_OK;
 	case PM_POST_RESTORE:
 	case PM_POST_SUSPEND:
+<<<<<<< HEAD
 		cpufreq_driver_target(cpufreq_cpu_get(0), SLEEP_FREQ,
 				ENABLE_FURTHER_CPUFREQ);
+=======
+		if ((policy = cpufreq_cpu_get(0)) == NULL)
+			goto resume_no_policy;
+		if (unlikely(lock_policy_rwsem_write(policy->cpu)))
+			goto resume_lock_fail;
+
+		ret = __cpufreq_driver_target(policy, sleep_freq,
+				ENABLE_FURTHER_CPUFREQ);
+
+		policy->min = orig_min;
+		policy->max = orig_max;
+
+		/* In case PM_SUSPEND_PREPARE never happened, paranoia? */
+		cpufreq_verify_within_limits(policy, policy->cpuinfo.min_freq,
+		                             policy->cpuinfo.max_freq);
+
+		unlock_policy_rwsem_write(policy->cpu);
+resume_lock_fail:
+		cpufreq_cpu_put(policy);
+resume_no_policy:
+>>>>>>> e615e33... Part 1 of adding in new mkasick patches
 		return NOTIFY_OK;
 	}
 	return NOTIFY_DONE;

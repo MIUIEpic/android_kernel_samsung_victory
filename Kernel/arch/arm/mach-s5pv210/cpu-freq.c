@@ -795,7 +795,11 @@ static int __init s5pv210_cpufreq_driver_init(struct cpufreq_policy *policy)
 		cpufreq_verify_within_limits(policy, policy->cpuinfo.min_freq,
 		                             DEFAULT_MAX_FREQ);
 
+<<<<<<< HEAD
 	return res;
+=======
+	return cpufreq_frequency_table_cpuinfo(policy, freq_table);
+>>>>>>> 506ce1c... Clean up
 }
 
 static int s5pv210_cpufreq_notifier_event(struct notifier_block *this,

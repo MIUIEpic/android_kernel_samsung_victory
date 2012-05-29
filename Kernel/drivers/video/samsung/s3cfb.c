@@ -1009,6 +1009,124 @@ static int s3cfb_sysfs_store_lcd_power(struct device *dev, struct device_attribu
 static DEVICE_ATTR(lcd_power, 0664,s3cfb_sysfs_show_lcd_power,s3cfb_sysfs_store_lcd_power);
 
 
+<<<<<<< HEAD
+=======
+#ifdef DISPLAY_BOOT_PROGRESS
+static void s3cfb_update_framebuffer(struct fb_info *fb,
+									int x, int y, void *buffer, 
+									int src_width, int src_height)
+{
+	struct s3cfb_global *fbdev =
+			platform_get_drvdata(to_platform_device(fb->device));
+	struct s3c_platform_fb *pdata = to_fb_plat(fbdev->dev);
+	struct fb_fix_screeninfo *fix = &fb->fix;
+	struct fb_var_screeninfo *var = &fb->var;
+	int row;
+	int bytes_per_pixel = (var->bits_per_pixel / 8 );
+	
+	unsigned char *pSrc = buffer;
+	unsigned char *pDst = fbdev->fb[pdata->default_win]->screen_base;
+
+	if (x+src_width > var->xres || y+src_height > var->yres)
+	{
+		dev_err(fbdev->dev,"invalid destination coordinate or source size (%d, %d) (%d %d) \n", x, y, src_width, src_height);
+		return;
+	}	
+
+	pDst += y * fix->line_length + x * bytes_per_pixel;	
+
+	for (row = 0; row < src_height ; row++)	
+	{		
+		memcpy(pDst, pSrc, src_width * bytes_per_pixel);
+		pSrc += src_width * bytes_per_pixel;
+		pDst += fix->line_length;
+	}
+}
+
+static void s3cfb_start_progress(struct fb_info *fb)
+{	
+	int x_pos;
+	init_timer(&progress_timer);	
+	
+	progress_timer.expires  = (get_jiffies_64() + (HZ/10));	
+	progress_timer.data     = (long)fb;	
+	progress_timer.function = progress_timer_handler;	
+	progress_pos = PROGRESS_BAR_LEFT_POS;	
+	
+	// draw progress background.
+	for (x_pos = PROGRESS_BAR_LEFT_POS ; x_pos <= PROGRESS_BAR_RIGHT_POS ; x_pos += PROGRESS_BAR_WIDTH)
+	{
+		s3cfb_update_framebuffer(fb,
+			x_pos,
+			PROGRESS_BAR_START_Y,
+			(void*)anycall_progress_bar,					
+			PROGRESS_BAR_WIDTH,
+			PROGRESS_BAR_HEIGHT);
+	}
+
+	s3cfb_update_framebuffer(fb,
+		PROGRESS_BAR_LEFT_POS,
+		PROGRESS_BAR_START_Y,
+		(void*)anycall_progress_bar_left,					
+		PROGRESS_BAR_WIDTH,
+		PROGRESS_BAR_HEIGHT);
+	
+	progress_pos += PROGRESS_BAR_WIDTH;	
+	
+	s3cfb_update_framebuffer(fb,		
+		progress_pos,
+		PROGRESS_BAR_START_Y,		
+		(void*)anycall_progress_bar_right,				
+		PROGRESS_BAR_WIDTH,
+		PROGRESS_BAR_HEIGHT);
+	
+	add_timer(&progress_timer);	
+	progress_flag = 1;
+
+}
+
+static void s3cfb_stop_progress(void)
+{	
+	if (progress_flag == 0)		
+		return;	
+	del_timer(&progress_timer);	
+	progress_flag = 0;
+}
+
+static void progress_timer_handler(unsigned long data)
+{	
+	int i;	
+	for(i = 0; i < 4; i++)	
+	{		
+		s3cfb_update_framebuffer((struct fb_info *)data,
+			progress_pos++,
+			PROGRESS_BAR_START_Y,
+			(void*)anycall_progress_bar_center,					
+			1,
+			PROGRESS_BAR_HEIGHT);	
+	}	
+	
+	s3cfb_update_framebuffer((struct fb_info *)data,		
+		progress_pos,
+		PROGRESS_BAR_START_Y,
+		(void*)anycall_progress_bar_right,		
+		PROGRESS_BAR_WIDTH,
+		PROGRESS_BAR_HEIGHT);    
+	
+	if (progress_pos + PROGRESS_BAR_WIDTH >= PROGRESS_BAR_RIGHT_POS )    
+	{        
+		s3cfb_stop_progress();    
+	}    
+	else    
+	{        
+		progress_timer.expires = (get_jiffies_64() + (HZ/10));         
+		progress_timer.function = progress_timer_handler;         
+		add_timer(&progress_timer);    
+	}
+}
+#endif
+
+>>>>>>> 4f4a1ba... MDNIE from crespo
 static int __devinit s3cfb_probe(struct platform_device *pdev)
 {
 	struct s3c_platform_fb *pdata;

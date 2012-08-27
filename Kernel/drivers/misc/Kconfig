@@ -475,8 +475,6 @@ config LEVEL
         help
           Say Y to enable debug level I/F support.
 
-<<<<<<< HEAD
-=======
 config LIVE_OC
 	bool "Support for Live OC"
 	default y
@@ -495,5 +493,4 @@ config BLX
 	help
 	  Say Y here to enable Battery Life eXtender
 
->>>>>>> 3f66321... Add BLQ
 endif # MISC_DEVICES

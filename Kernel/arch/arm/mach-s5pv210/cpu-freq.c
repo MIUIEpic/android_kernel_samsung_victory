@@ -70,8 +70,6 @@ struct s5pv210_dvs_conf {
 };
 
 #ifdef CONFIG_DVFS_LIMIT
-static unsigned int g_dvfs_printk_mask = ~(1<<DVFS_LOCK_TOKEN_PVR) &
-                                          (1<<DVFS_LOCK_TOKEN_NUM)-1;
 static unsigned int g_dvfs_high_lock_token = 0;
 static unsigned int g_dvfs_high_lock_limit = MAX_PERF_LEVEL;
 static unsigned int g_dvfslockval[DVFS_LOCK_TOKEN_NUM];
@@ -196,18 +194,6 @@ static struct s3c_freq clk_info[] = {
 	},
 };
 
-<<<<<<< HEAD
-=======
-#ifdef CONFIG_LIVE_OC
-extern void cpufreq_stats_reset(void);
-
-static unsigned long sleep_freq, original_dmc0_reg;
-static unsigned long original_fclk[sizeof(clk_info) /  sizeof(struct s3c_freq)];
-
-static int dividers[sizeof(clk_info) /  sizeof(struct s3c_freq)];
-#endif
-
->>>>>>> 81173d5... The DRAM frequency is also scaled according to the OC value.
 static int s5pv210_cpufreq_verify_speed(struct cpufreq_policy *policy)
 {
 	if (policy->cpu)
@@ -374,9 +360,8 @@ void s5pv210_lock_dvfs_high_level(uint nToken, uint perf_level)
 	uint freq_level;
 	struct cpufreq_policy *policy;
 
-	if (g_dvfs_printk_mask & (1 << nToken))
-		printk(KERN_DEBUG "%s : lock with token(%d) level(%d) current(%X)\n",
-		       __func__, nToken, perf_level, g_dvfs_high_lock_token);
+	printk(KERN_DEBUG "%s : lock with token(%d) level(%d) current(%X)\n",
+			__func__, nToken, perf_level, g_dvfs_high_lock_token);
 
 	if (g_dvfs_high_lock_token & (1 << nToken))
 		return;
@@ -421,9 +406,8 @@ void s5pv210_unlock_dvfs_high_level(unsigned int nToken)
 		}
 	}
 
-	if (g_dvfs_printk_mask & (1 << nToken))
-		printk(KERN_DEBUG "%s : unlock with token(%d) current(%X) level(%d)\n",
-		       __func__, nToken, g_dvfs_high_lock_token, g_dvfs_high_lock_limit);
+	 printk(KERN_DEBUG "%s : unlock with token(%d) current(%X) level(%d)\n",
+                        __func__, nToken, g_dvfs_high_lock_token, g_dvfs_high_lock_limit);
 
 	//mutex_unlock(&dvfs_high_lock);
 }
@@ -738,191 +722,6 @@ static int s5pv210_cpufreq_resume(struct cpufreq_policy *policy)
 }
 #endif
 
-<<<<<<< HEAD
-=======
-#ifdef CONFIG_LIVE_OC
-static int find_divider(int freq)
-{
-    int i, divider;
-
-    divider = 24;
-
-    if (freq % 3 == 0) {
-	freq /= 3;
-	divider /= 3;
-    }
- 
-    for (i = 0; i < 3; i++) {
-	if (freq % 2 == 0) {
-	    freq /= 2;
-	    divider /= 2;
-	}
-    }
-
-    return divider;
-}
-
-static void liveoc_init(void)
-{
-    int i, index;
-
-    i = 0;
-
-    while (freq_table[i].frequency != CPUFREQ_TABLE_END) {
-	index = freq_table[i].index;
-
-	original_fclk[index] = clk_info[index].fclk;
-	dividers[index] = find_divider(clk_info[index].fclk / 1000);
-
-	sleep_freq = SLEEP_FREQ;
-
-	i++;
-    }
-
-	original_dmc0_reg = backup_dmc0_reg;
-
-    return;
-}
-
-void liveoc_update(unsigned int oc_value)
-{
-    int i, index, index_min = L0, index_max = L0;
-
-    struct cpufreq_policy * policy = cpufreq_cpu_get(0);
-
-    mutex_lock(&set_freq_lock);
-
-    i = 0;
-    apll_freq_max = 0;
-
-    while (freq_table[i].frequency != CPUFREQ_TABLE_END) {
-
-	index = freq_table[i].index;
-	
-	if (clk_info[index].armclk == policy->user_policy.min)
-	    index_min = index;
-
-	if (clk_info[index].armclk == policy->user_policy.max)
-	    index_max = index;
-
-	clk_info[index].fclk = (original_fclk[index] * oc_value) / 100;
-	dividers[index] = find_divider(clk_info[index].fclk / 1000);
-
-	clk_info[index].armclk = clk_info[index].fclk / (clkdiv_val[index][0] + 1);
-	clk_info[index].hclk_msys = clk_info[index].fclk / (clkdiv_val[index][1] + 1);
-	clk_info[index].pclk_msys = clk_info[index].hclk_msys / (clkdiv_val[index][3] + 1);
-
-	freq_table[i].frequency = clk_info[index].armclk;
-
-	if (freq_table[i].frequency > apll_freq_max)
-	    apll_freq_max = freq_table[i].frequency;
-
-	if (original_fclk[index] / (clkdiv_val[index][0] + 1) == SLEEP_FREQ)
-	    sleep_freq = clk_info[index].armclk;
-
-	i++;
-    }
-
-    apll_freq_max /= 1000;
-
-    backup_dmc0_reg = ((original_dmc0_reg * oc_value) / 100) & 0xFFFF;
-
-    cpufreq_frequency_table_cpuinfo(policy, freq_table);
-
-    policy->user_policy.min = freq_table[index_min].frequency;
-    policy->user_policy.max = freq_table[index_max].frequency;  
-
-    mutex_unlock(&set_freq_lock);
-
-    cpufreq_stats_reset();
-
-    return;
-}
-EXPORT_SYMBOL(liveoc_update);
-#endif
-
-#ifdef CONFIG_CUSTOM_VOLTAGE
-static const int num_freqs = sizeof(dvs_conf) / sizeof(struct s5pv210_dvs_conf);
-
-void customvoltage_updatearmvolt(unsigned long * arm_voltages)
-{
-    int i;
-
-    mutex_lock(&set_freq_lock);
-
-    for (i = 0; i < num_freqs; i++) {
-	if (arm_voltages[i] > arm_volt_max)
-	    arm_voltages[i] = arm_volt_max;
-	dvs_conf[i].arm_volt = arm_voltages[i];
-    }
-
-    mutex_unlock(&set_freq_lock);
-
-    return;
-}
-EXPORT_SYMBOL(customvoltage_updatearmvolt);
-
-void customvoltage_updateintvolt(unsigned long * int_voltages)
-{
-    int i;
-
-    mutex_lock(&set_freq_lock);
-
-    for (i = 0; i < num_freqs; i++) {
-	if (int_voltages[i] > int_volt_max)
-	    int_voltages[i] = int_volt_max;
-	dvs_conf[i].int_volt = int_voltages[i];
-    }
-
-    mutex_unlock(&set_freq_lock);
-
-    return;
-}
-EXPORT_SYMBOL(customvoltage_updateintvolt);
-
-void customvoltage_updatemaxvolt(unsigned long * max_voltages)
-{
-    mutex_lock(&set_freq_lock);
-
-    arm_volt_max = max_voltages[0];
-    int_volt_max = max_voltages[1];
-
-    mutex_unlock(&set_freq_lock);
-
-    return;
-}
-EXPORT_SYMBOL(customvoltage_updatemaxvolt);
-
-int customvoltage_numfreqs(void)
-{
-    return num_freqs;
-}
-EXPORT_SYMBOL(customvoltage_numfreqs);
-
-void customvoltage_freqvolt(unsigned long * freqs, unsigned long * arm_voltages,
-			    unsigned long * int_voltages, unsigned long * max_voltages)
-{
-    int i = 0;
-
-    while (freq_table[i].frequency != CPUFREQ_TABLE_END) {
-	freqs[freq_table[i].index] = freq_table[i].frequency;
-	i++;
-    }
-
-    for (i = 0; i < num_freqs; i++) {
-	arm_voltages[i] = dvs_conf[i].arm_volt;
-	int_voltages[i] = dvs_conf[i].int_volt;
-    }
-
-    max_voltages[0] = arm_volt_max;
-    max_voltages[1] = int_volt_max;
-
-    return;
-}
-EXPORT_SYMBOL(customvoltage_freqvolt);
-#endif
-
->>>>>>> 81173d5... The DRAM frequency is also scaled according to the OC value.
 static int __init s5pv210_cpufreq_driver_init(struct cpufreq_policy *policy)
 {
 	u32 rate ;
@@ -996,146 +795,32 @@ static int __init s5pv210_cpufreq_driver_init(struct cpufreq_policy *policy)
 		cpufreq_verify_within_limits(policy, policy->cpuinfo.min_freq,
 		                             DEFAULT_MAX_FREQ);
 
-<<<<<<< HEAD
 	return res;
-=======
-	return cpufreq_frequency_table_cpuinfo(policy, freq_table);
->>>>>>> 506ce1c... Clean up
 }
 
 static int s5pv210_cpufreq_notifier_event(struct notifier_block *this,
 		unsigned long event, void *ptr)
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-	static int max, min;
->>>>>>> 4d2e620... Fix power supspend cpu frequency, thanks to nubecoder.
 	int ret;
 
-	struct cpufreq_policy *policy = cpufreq_cpu_get(0);
-
 	switch (event) {
 	case PM_SUSPEND_PREPARE:
-<<<<<<< HEAD
 		ret = cpufreq_driver_target(cpufreq_cpu_get(0), SLEEP_FREQ,
 				DISABLE_FURTHER_CPUFREQ);
-=======
-	static unsigned int orig_min = 0, orig_max = ~0;
-	struct cpufreq_policy *policy;
-	int ret = -EINVAL;
-
-	switch (event) {
-	case PM_SUSPEND_PREPARE:
-		if ((policy = cpufreq_cpu_get(0)) == NULL)
-			goto suspend_no_policy;
-		if (unlikely(lock_policy_rwsem_write(policy->cpu)))
-			goto suspend_lock_fail;
-
-		/* Ensure suspend policy includes SLEEP_FREQ, othewrise may crash. */
-		orig_min    = policy->min;
-		orig_max    = policy->max;
-		policy->min = policy->max = sleep_freq;
-
-		/* Call "internal" version as policy is already locked. */
-		ret = __cpufreq_driver_target(policy, sleep_freq,
-				DISABLE_FURTHER_CPUFREQ);
-
-		unlock_policy_rwsem_write(policy->cpu);
-suspend_lock_fail:
-		cpufreq_cpu_put(policy);
-suspend_no_policy:
->>>>>>> e615e33... Part 1 of adding in new mkasick patches
-=======
-#ifdef CONFIG_LIVE_OC
-		max = policy->max;
-		min = policy->min;
-		policy->max = policy->min = sleep_freq;
-		ret = cpufreq_driver_target(policy, sleep_freq,
-			DISABLE_FURTHER_CPUFREQ);
-#else
-		max = policy->max;
-		min = policy->min;
-		policy->max = policy->min = SLEEP_FREQ;
-		ret = cpufreq_driver_target(policy, SLEEP_FREQ,
-			DISABLE_FURTHER_CPUFREQ);
-#endif
->>>>>>> 4d2e620... Fix power supspend cpu frequency, thanks to nubecoder.
 		if (ret < 0)
 			return NOTIFY_BAD;
 		return NOTIFY_OK;
 	case PM_POST_RESTORE:
 	case PM_POST_SUSPEND:
-<<<<<<< HEAD
-<<<<<<< HEAD
 		cpufreq_driver_target(cpufreq_cpu_get(0), SLEEP_FREQ,
 				ENABLE_FURTHER_CPUFREQ);
-=======
-		if ((policy = cpufreq_cpu_get(0)) == NULL)
-			goto resume_no_policy;
-		if (unlikely(lock_policy_rwsem_write(policy->cpu)))
-			goto resume_lock_fail;
-
-		ret = __cpufreq_driver_target(policy, sleep_freq,
-				ENABLE_FURTHER_CPUFREQ);
-
-		policy->min = orig_min;
-		policy->max = orig_max;
-
-		/* In case PM_SUSPEND_PREPARE never happened, paranoia? */
-		cpufreq_verify_within_limits(policy, policy->cpuinfo.min_freq,
-		                             policy->cpuinfo.max_freq);
-
-		unlock_policy_rwsem_write(policy->cpu);
-resume_lock_fail:
-		cpufreq_cpu_put(policy);
-resume_no_policy:
->>>>>>> e615e33... Part 1 of adding in new mkasick patches
-=======
-#ifdef CONFIG_LIVE_OC
-		cpufreq_driver_target(policy, sleep_freq,
-				ENABLE_FURTHER_CPUFREQ);
-#else
-		cpufreq_driver_target(policy, SLEEP_FREQ,
-				ENABLE_FURTHER_CPUFREQ);
-#endif
-		policy->max = max;
-		policy->min = min;
->>>>>>> 4d2e620... Fix power supspend cpu frequency, thanks to nubecoder.
 		return NOTIFY_OK;
 	}
 	return NOTIFY_DONE;
 }
 
-#ifdef CONFIG_DVFS_LIMIT
-static ssize_t show_dvfs_printk_mask(struct cpufreq_policy *policy,
-                                     char *buf)
-{
-	return snprintf(buf, PAGE_SIZE, "%u\n", g_dvfs_printk_mask);
-}
-
-static ssize_t store_dvfs_printk_mask(struct cpufreq_policy *policy,
-                                      const char *buf, size_t count)
-{
-	unsigned long val;
-	int res;
-
-	if ((res = strict_strtoul(buf, 0, &val)) < 0)
-		return res;
-
-	g_dvfs_printk_mask = val & (1<<DVFS_LOCK_TOKEN_NUM)-1;
-
-	return count;
-}
-
-cpufreq_freq_attr_rw(dvfs_printk_mask);
-#endif
-
 static struct freq_attr *s5pv210_cpufreq_attr[] = {
 	&cpufreq_freq_attr_scaling_available_freqs,
-#ifdef CONFIG_DVFS_LIMIT
-	&dvfs_printk_mask,
-#endif
 	NULL,
 };
 
@@ -1182,3 +867,4 @@ finish:
 }
 
 late_initcall(s5pv210_cpufreq_init);
+

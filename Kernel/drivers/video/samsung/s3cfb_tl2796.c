@@ -79,15 +79,7 @@ struct s5p_lcd *lcd_;
 u32 original_color_adj_mults[3];
 unsigned int panel_config_sequence = 0;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-int hacky_v1_offset[3] = {-31, -34, -34};
-=======
 int hacky_v1_offset[3] = {-27, -34, -40};
->>>>>>> 90da0f3... Add voodoo color.
-=======
-int hacky_v1_offset[3] = {-26, -30, -33};
->>>>>>> c3118fa... Modify Voodoo Color defaults
 
 static const u16 s6e63m0_SEQ_ETC_SETTING_SAMSUNG[] = {
 /* ETC Condition Set Command */
@@ -1239,3 +1231,4 @@ static void __exit tl2796_exit(void)
 
 module_init(tl2796_init);
 module_exit(tl2796_exit);
+

@@ -180,7 +180,6 @@ static const struct tl2796_gamma_adj_points gamma_adj_points = {
 .v255 = BV_255,
 };
 
-<<<<<<< HEAD
 static const struct tl2796_gamma_adj_points gamma_adj_points = {
 .v0 = 0,
 .v1 = BV_1,
@@ -191,8 +190,6 @@ static const struct tl2796_gamma_adj_points gamma_adj_points = {
 .v255 = BV_255,
 };
 
-=======
->>>>>>> c3118fa... Modify Voodoo Color defaults
 #ifdef CONFIG_FB_VOODOO
 struct gamma_entry gamma_table[] = {
 #else
@@ -4573,8 +4570,6 @@ struct s5p_panel_data aries_panel_data = {
 		* Bx 0.14142, By 0.04258
 		*/
 		.mult = {
-<<<<<<< HEAD
-<<<<<<< HEAD
 			2318372099U,
 			2117262806U,
 			2117262806U,
@@ -4583,16 +4578,12 @@ struct s5p_panel_data aries_panel_data = {
 		* Bx 0.14142, By 0.04258
 		*/
 		.mult = {
-=======
->>>>>>> parent of ef186c2... port nexus s framebuffer driver
 			2055448640U,
 			1932735200U,
 			2341779680U,
-=======
 			1870388960U,
 			2332213600U,
 			2921039680U,
->>>>>>> c3118fa... Modify Voodoo Color defaults
 		},
 		.rshift = 31,
 	},
@@ -4602,19 +4593,14 @@ struct s5p_panel_data aries_panel_data = {
 	.gamma_table_size = ARRAY_SIZE(gamma_table),
 };
 
-<<<<<<< HEAD
 static const u16 brightness_setting_table[] = {
-=======
->>>>>>> parent of ef186c2... port nexus s framebuffer driver
 #ifdef CONFIG_FB_S3C_NT35580
 static unsigned short brightness_setting_table[] = {
 	0x051, 0x17f,
 	ENDDEF, 0x0000
 endif
 };
-<<<<<<< HEAD
 endif
-=======
 
 const unsigned short nt35580_SEQ_DISPLAY_ON[] = {
 	0x029,
@@ -4689,4 +4675,3 @@ struct s5p_tft_panel_data aries_tft_panel_data = {
 	.brightness_set = brightness_setting_table,
 };
 #endif
->>>>>>> parent of ef186c2... port nexus s framebuffer driver

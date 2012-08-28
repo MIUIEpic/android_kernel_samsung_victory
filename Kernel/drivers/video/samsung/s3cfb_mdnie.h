@@ -1,3 +1,4 @@
+
 /* linux/drivers/video/samsung/s3cfb_mdnie.h
  *
  * Header file for Samsung (MDNIE) driver
@@ -328,10 +329,32 @@
 #define SIG_MDNIE_VIDEO_COLD_MODE			3
 #define SIG_MDNIE_CAMERA_MODE				4
 #define SIG_MDNIE_NAVI						5
-#define SIG_MDNIE_DMB_MODE					6
-#define SIG_MDNIE_VT_MODE					7
-#define SIG_MDNIE_GALLERY_MODE				8
+#if defined(CONFIG_ARIES_LATONA)
+#define SIG_MDNIE_GALLERY					6
+#endif
 
+#if defined(CONFIG_ARIES_LATONA)
+typedef enum
+{
+	mDNIe_UI_MODE,
+	mDNIe_VIDEO_MODE,
+	mDNIe_VIDEO_WARM_MODE,
+	mDNIe_VIDEO_COLD_MODE,
+	mDNIe_CAMERA_MODE,
+	mDNIe_NAVI,
+	mDNIe_GALLERY,
+}Lcd_mDNIe_UI;
+#else
+typedef enum
+{
+	mDNIe_UI_MODE,
+	mDNIe_VIDEO_MODE,
+	mDNIe_VIDEO_WARM_MODE,
+	mDNIe_VIDEO_COLD_MODE,
+	mDNIe_CAMERA_MODE,
+	mDNIe_NAVI
+}Lcd_mDNIe_UI;
+#endif
 
 #define CT00CM	0x0064	//MCM 0x0064=10000k 5B=9100K 43=6700K 3A=5500K
 
@@ -369,4 +392,3 @@ int s3c_mdnie_stop(void);
 extern void mDNIe_Mode_Set(void);
 
 #endif
-

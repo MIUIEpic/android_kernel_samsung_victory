@@ -12,7 +12,6 @@
 #include <linux/types.h>
 
 struct gamma_entry {
-<<<<<<< HEAD
 	u32 brightness;
 	u32 v[3];
 };
@@ -30,7 +29,6 @@ struct tl2796_gamma_adj_points {
 struct tl2796_color_adj {
 	u32 mult[3];
 	int rshift;
-=======
 	u32 brightness;
 	u32 v[3];
 };
@@ -48,7 +46,6 @@ struct tl2796_gamma_adj_points {
 struct tl2796_color_adj {
 	u32 mult[3];
 	int rshift;
->>>>>>> 90da0f3... Add voodoo color.
 };
 
 struct s5p_panel_data {
@@ -56,7 +53,6 @@ struct s5p_panel_data {
 	const u16 *seq_etc_set;
 	const u16 *standby_on;
 	const u16 *standby_off;
-<<<<<<< HEAD
 
 	int gpio_dcx;
 	int gpio_rdx;
@@ -73,7 +69,6 @@ struct s5p_panel_data {
   	struct gamma_entry *gamma_table;
 #else
 	const struct gamma_entry *gamma_table;
-=======
 	const u16 **gamma19_table;
 	const u16 **gamma22_table;
 	const u16 *gamma_update;
@@ -95,13 +90,11 @@ struct s5p_panel_data {
   	struct gamma_entry *gamma_table;
 #else
 	const struct gamma_entry *gamma_table;
->>>>>>> 90da0f3... Add voodoo color.
 #endif
 	int gamma_table_size;
 };
 
 enum {
-<<<<<<< HEAD
 	BV_0 = 0,
 	BV_1 = 0xD8722A,
 	BV_19 = 0xD8722A,
@@ -109,7 +102,6 @@ enum {
 	BV_87 = 0x18083FB0,
 	BV_171 = 0x6A472534,
 	BV_255 = 0xFFFFFFFF,
-=======
 	BV_0 = 0,
 	BV_1 = 0x552D,
 	BV_19 = 0xD8722A,
@@ -117,5 +109,4 @@ enum {
 	BV_87 = 0x18083FB0,
 	BV_171 = 0x6A472534,
 	BV_255 = 0xFFFFFFFF,
->>>>>>> 90da0f3... Add voodoo color.
 };

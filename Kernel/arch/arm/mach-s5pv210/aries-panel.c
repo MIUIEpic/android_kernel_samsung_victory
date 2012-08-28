@@ -170,7 +170,6 @@ static const u16 s6e63m0_SEQ_ETC_SETTING[] = {
 	ENDDEF, 0x0000
 };
 
-<<<<<<< HEAD
 static const struct tl2796_gamma_adj_points gamma_adj_points = {
 	.v0 = 0,
 	.v1 = BV_1,
@@ -180,7 +179,7 @@ static const struct tl2796_gamma_adj_points gamma_adj_points = {
 	.v171 = BV_171,
 	.v255 = BV_255,
 };
-=======
+
 static const struct tl2796_gamma_adj_points gamma_adj_points = {
 .v0 = 0,
 .v1 = BV_1,
@@ -1970,7 +1969,6 @@ static const u16 s6e63m0_19gamma_30cd[] = {
 
 	ENDDEF, 0x0000                               
 }; 
->>>>>>> 90da0f3... Add voodoo color.
 
 #ifdef CONFIG_FB_VOODOO
 struct gamma_entry gamma_table[] = {
@@ -2215,14 +2213,11 @@ struct s5p_panel_data aries_panel_data = {
 	.seq_etc_set = s6e63m0_SEQ_ETC_SETTING,
 	.standby_on = s6e63m0_SEQ_STANDBY_ON,
 	.standby_off = s6e63m0_SEQ_STANDBY_OFF,
-<<<<<<< HEAD
-=======
 	.gamma19_table = p19Gamma_set,
 	.gamma22_table = p22Gamma_set,
 	.gamma_update = gamma_updates,
 	.acl_table = ACL_cutoff_set,
 	.acl_init = acl_cutoff_init,
->>>>>>> 90da0f3... Add voodoo color.
 	.gpio_dcx = S5PV210_GPF0(0), /* H_SYNC pad */
 	.gpio_rdx = S5PV210_GPF0(2), /* Enable */
 	.gpio_csx = S5PV210_MP01(1),
@@ -2246,7 +2241,6 @@ struct s5p_panel_data aries_panel_data = {
 	},
 	.color_adj = {
 		/* Convert from 8500K to D65, assuming:
-<<<<<<< HEAD
 		 * Rx 0.66950, Ry 0.33100
 		 * Gx 0.18800, Gy 0.74350
 		 * Bx 0.14142, By 0.04258
@@ -2255,7 +2249,6 @@ struct s5p_panel_data aries_panel_data = {
 			2318372099U,
 			2117262806U,
 			2117262806U,
-=======
 		* Rx 0.66950, Ry 0.33100
 		* Gx 0.18800, Gy 0.74350
 		* Bx 0.14142, By 0.04258
@@ -2264,7 +2257,6 @@ struct s5p_panel_data aries_panel_data = {
 			2055448640U,
 			1932735200U,
 			2341779680U,
->>>>>>> 90da0f3... Add voodoo color.
 		},
 		.rshift = 31,
 	},
@@ -2274,12 +2266,11 @@ struct s5p_panel_data aries_panel_data = {
 	.gamma_table_size = ARRAY_SIZE(gamma_table),
 };
 
-<<<<<<< HEAD
 static const u16 brightness_setting_table[] = {
-=======
 #ifdef CONFIG_FB_S3C_NT35580
 static unsigned short brightness_setting_table[] = {
->>>>>>> 90da0f3... Add voodoo color.
 	0x051, 0x17f,
 	ENDDEF, 0x0000
+endif
 };
+endif

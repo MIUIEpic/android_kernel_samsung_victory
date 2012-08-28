@@ -64,10 +64,7 @@ struct cypress_touchkey_devdata {
 	bool is_delay_led_on;
 	bool is_backlight_on;
 	bool is_key_pressed;
-<<<<<<< HEAD
 	bool is_bl_disabled;
-=======
->>>>>>> 888da1f... Omnibus fixes for cypress-touchkey.
 	struct mutex mutex;
 #ifdef BACKLIGHT_DELAYS
 	struct delayed_work key_off_work;
@@ -185,12 +182,9 @@ static ssize_t touch_led_control(struct device *dev,
 
 	if (strncmp(buf, "1", 1) == 0)
 	{
-<<<<<<< HEAD
 		if (devdata_led->is_bl_disabled)
 			goto unlock;
 
-=======
->>>>>>> 888da1f... Omnibus fixes for cypress-touchkey.
 		devdata_led->is_backlight_on = true;
 		if (devdata_led->is_powering_on || devdata_led->is_key_pressed) {
 			dev_err(dev, "%s: delay led on \n", __func__);
@@ -571,7 +565,6 @@ DELAY_ATTR(resume_delay)
 #undef DELAY_ATTR
 #endif
 
-<<<<<<< HEAD
 static ssize_t touchleds_disabled_show(struct device *dev,
                                        struct device_attribute *attr,
                                        char *buf)
@@ -606,8 +599,6 @@ static ssize_t touchleds_disabled_store(struct device *dev,
 static DEVICE_ATTR(touchleds_disabled, S_IRUGO | S_IWUSR,
                    touchleds_disabled_show, touchleds_disabled_store);
 
-=======
->>>>>>> 888da1f... Omnibus fixes for cypress-touchkey.
 extern struct class *sec_class;
 struct device *ts_key_dev;
 
@@ -668,10 +659,7 @@ static int cypress_touchkey_probe(struct i2c_client *client,
 	devdata->is_delay_led_on = false;
 	devdata->is_backlight_on = true;
 	devdata->is_key_pressed = false;
-<<<<<<< HEAD
 	devdata->is_bl_disabled = false;
-=======
->>>>>>> 888da1f... Omnibus fixes for cypress-touchkey.
 	mutex_init(&devdata->mutex);
 #ifdef BACKLIGHT_DELAYS
 	INIT_DELAYED_WORK(&devdata->key_off_work, key_off_func);
@@ -725,12 +713,9 @@ static int cypress_touchkey_probe(struct i2c_client *client,
 		pr_err("Unable to create \"%s\".\n", dev_attr_resume_delay.attr.name);
 #endif
 
-<<<<<<< HEAD
 	if (device_create_file(ts_key_dev, &dev_attr_touchleds_disabled) < 0)
 		pr_err("Unable to create \"%s\".\n", dev_attr_touchleds_disabled.attr.name);
 
-=======
->>>>>>> 888da1f... Omnibus fixes for cypress-touchkey.
 #if 0
 	err = i2c_touchkey_write_byte(devdata, devdata->backlight_on);
 	if (err) {
@@ -768,10 +753,7 @@ err_read:
 	device_remove_file(ts_key_dev, &dev_attr_key_off_delay);
 	device_remove_file(ts_key_dev, &dev_attr_resume_delay);
 #endif
-<<<<<<< HEAD
 	device_remove_file(ts_key_dev, &dev_attr_touchleds_disabled);
-=======
->>>>>>> 888da1f... Omnibus fixes for cypress-touchkey.
 	mutex_destroy(&devdata->mutex);
 	input_unregister_device(input_dev);
 	goto err_input_alloc_dev;
@@ -802,10 +784,7 @@ static int __devexit i2c_touchkey_remove(struct i2c_client *client)
 	device_remove_file(ts_key_dev, &dev_attr_resume_delay);
 	cancel_delayed_work_sync(&devdata->key_off_work);
 #endif
-<<<<<<< HEAD
 	device_remove_file(ts_key_dev, &dev_attr_touchleds_disabled);
-=======
->>>>>>> 888da1f... Omnibus fixes for cypress-touchkey.
 	mutex_destroy(&devdata->mutex);
 	input_unregister_device(devdata->input_dev);
 	kfree(devdata);
@@ -850,3 +829,4 @@ module_exit(touchkey_exit);
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("@@@");
 MODULE_DESCRIPTION("cypress touch keypad");
+

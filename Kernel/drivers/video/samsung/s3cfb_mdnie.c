@@ -95,30 +95,10 @@ struct device *switch_mdnieset_outdoor_dev;
 #include "s3cfb_mdnie_value.h"
 #endif
 
-<<<<<<< HEAD
-mDNIe_data_type mDNIe_Video[]= 
-{
-	0x0084, 0x0020,
-	0x0090, 0x0000,
-	0x0094, 0x0fff,
-	0x0098, 0x005c,
-	0x009c, 0x07f1, //de 127, ce off //de 63
-	0x00ac, 0x0080, //skin detect off, cs 512 //cs 128
-	0x00b4, 0x0100, //001, //de th.
-	0x0120, CT00CM, //MCM 10000K
-	CTHIGHVAL1
-	CTHIGHVAL2
-	CTHIGHVAL3
-	CTHIGHVAL4
-	CTHIGHVAL5
-	END_SEQ, 0x0000,
-};
-=======
 Lcd_mDNIe_UI current_mDNIe_UI = mDNIe_UI_MODE; // mDNIe Set Status Checking Value.
 u8 current_mDNIe_OutDoor_OnOff = FALSE;
 
 int mDNIe_Tuning_Mode = FALSE;
->>>>>>> parent of f514d0d... MDNIE from crespo
 
 #ifdef CONFIG_FB_S3C_MDNIE_TUNINGMODE_FOR_BACKLIGHT
 #if 0
@@ -132,9 +112,6 @@ extern int pre_val;
 
 u16 mDNIe_data_ui[]=
 {
-<<<<<<< HEAD
-	0x0084, 0x0020,
-=======
 #if defined(CONFIG_ARIES_LATONA)
 	0x0084,0x0020, //algorithm selection + mcm
 	0x0090,0x0000, //decontour th.
@@ -150,21 +127,9 @@ u16 mDNIe_data_ui[]=
 	END_SEQ, 0x0000,
 #else
 	0x0084, 0x0040,
->>>>>>> parent of f514d0d... MDNIE from crespo
 	0x0090, 0x0000,
 	0x0094, 0x0fff,
 	0x0098, 0x005C,
-<<<<<<< HEAD
-	0x009C, 0x0011,
-	0x00AC, 0x0000,
-	0x00b4, 0x0100, //3ff, //de th.
-	0x0120, CT00CM, //MCM 10000K
-	CTHIGHVAL1
-	CTHIGHVAL2
-	CTHIGHVAL3
-	CTHIGHVAL4
-	CTHIGHVAL5
-=======
 	0x009C, 0x0ff0,
 	0x00AC, 0x0080,
 	0x00B4, 0x0180,
@@ -173,102 +138,10 @@ u16 mDNIe_data_ui[]=
 	0x00C8, 0x008D,
 	0x00D0, 0x00C0,
 	0x0100, 0x0000,
->>>>>>> parent of f514d0d... MDNIE from crespo
 	END_SEQ, 0x0000,
 #endif
 };
 
-<<<<<<< HEAD
-mDNIe_data_type mDNIe_Camera_Outdoor_Mode[]= 
-{
-	0x0084, 0x00a0,
-	0x0090, 0x0000,
-	0x0094, 0x0FFF,
-	0x0098, 0x005C,
-	0x009c, 0x0011, //de 0, ce off
-	0x00ac, 0x0000, //skin detect off, cs off
-	0x00b4, 0x0100, //3ff, //de th.
-	0x0100, 0x5040,
-	0x0120, CT00CM, //MCM 10000K
-	CTHIGHVAL1
-	CTHIGHVAL2
-	CTHIGHVAL3
-	CTHIGHVAL4
-	CTHIGHVAL5
-	END_SEQ, 0x0000,
-};
-
-mDNIe_data_type mDNIe_UI[]= 
-{
-	//start
-	0x0084, 0x0020, // HDTR
-	0x0090, 0x0000, // DeConTh off
-	0x0094, 0x0FFF, // DirTh off
-	0x0098, 0x005C, // SimplTh off
-	0x009c, 0x0011, //0x01f0 de 15, ce off //0x00f0 de 7, ce off //0x0010 de 0, ce off //de off, ce off
-	0x00ac, 0x0010, //20, //skin detect off, cs 32
-	0x00B4, 0x0a00, // 0x03FF,  DETh ---- --00 0000 0000
-	0x0120, CT00CM, //MCM 10000K
-	CTHIGHVAL1
-	CTHIGHVAL2
-	CTHIGHVAL3
-	CTHIGHVAL4
-	CTHIGHVAL5
-	END_SEQ, 0x0000,
-};
-
-mDNIe_data_type mDNIe_Video_Warm[]= 
-{
-	0x0084, 0x0020,
-	0x0090, 0x0000,
-	0x0094, 0x0fff,
-	0x0098, 0x005C,
-	0x009c, 0x07f1, //ff1, //de 127, ce off //de 63
-	0x00ac, 0x0080, //200, //skin detect off, cs 512 cs 128
-	0x00b4, 0x0100, //001, //de th.
-	0x0120, CT00CM, //MCM 10000K
-	CTHIGHVAL1W
-	CTHIGHVAL2W
-	CTHIGHVAL3W
-	CTHIGHVAL4W
-	CTHIGHVAL5W
-	END_SEQ, 0x0000,
-};
-
-mDNIe_data_type mDNIe_Video_WO_Mode[]= 
-{
-	0x0084, 0x00a0,
-	0x0090, 0x0000,
-	0x0094, 0x0fff,
-	0x0098, 0x005C,
-	0x009c, 0x07f1, //ff1, //de 127, ce off
-	0x00ac, 0x0080, //200, //skin detect off, cs 512
-	0x00b4, 0x0100, //001, //de th.
-	0x0100, 0x5050,
-	0x0120, CT00CM, //MCM 10000K
-	CTHIGHVAL1W
-	CTHIGHVAL2W
-	CTHIGHVAL3W
-	CTHIGHVAL4W
-	CTHIGHVAL5W
-};
-
-mDNIe_data_type mDNIe_Video_Cold[]= 
-{
-	0x0084, 0x0020,
-	0x0090, 0x0000,
-	0x0094, 0x0fff,
-	0x0098, 0x005c,
-	0x009c, 0x07f1, //ff1, //de 127, ce off
-	0x00ac, 0x0080, //200, //skin detect off, cs 512
-	0x00b4, 0x0100, //001, //de th.
-	0x0120, CT00CM, //MCM 10000K
-	CTHIGHVAL1C
-	CTHIGHVAL2C
-	CTHIGHVAL3C
-	CTHIGHVAL4C
-	CTHIGHVAL5C
-=======
 u16 mDNIe_data_300cd_level1[]=
 {
 	0x0084, 0x0080,
@@ -283,28 +156,11 @@ u16 mDNIe_data_300cd_level1[]=
 	0x00C8, 0x008D,
 	0x00D0, 0x00C0,
 	0x0100, 0x4020,
->>>>>>> parent of f514d0d... MDNIE from crespo
 	END_SEQ, 0x0000,
 };
 #if 0
 u16 mDNIe_data_300cd_level2[]=
 {
-<<<<<<< HEAD
-	0x0084, 0x00a0,
-	0x0090, 0x0000,
-	0x0094, 0x0fff,
-	0x0098, 0x005C,
-	0x009c, 0x07f1, //ff1, //de 127, ce off
-	0x00ac, 0x0080, //200, //skin detect off, cs 512
-	0x00b4, 0x0100, //001, //de th.
-	0x0100, 0x5050,
-	0x0120, CT00CM, //MCM 10000K
-	CTHIGHVAL1C
-	CTHIGHVAL2C
-	CTHIGHVAL3C
-	CTHIGHVAL4C
-	CTHIGHVAL5C
-=======
 	0x0084, 0x0080,
 	0x0090, 0x0000,
 	0x0094, 0x0fff,
@@ -317,45 +173,11 @@ u16 mDNIe_data_300cd_level2[]=
 	0x00C8, 0x008D,
 	0x00D0, 0x0100,
 	0x0100, 0x6060,
->>>>>>> parent of f514d0d... MDNIE from crespo
 	END_SEQ, 0x0000,
 };
 #endif
 u16 mDNIe_data_ui_down[]=
 {
-<<<<<<< HEAD
-	0x0084, 0x00a0,
-	0x0090, 0x0000,
-	0x0094, 0x0fff,
-	0x0098, 0x005C,
-	0x009c, 0x0011, //de 127, ce off //de 63
-	0x00ac, 0x0010, //skin detect off, cs 512 //cs 256
-	0x00B4, 0x0001,
-	0x0100, 0x5050,
-	0x0120, CT00CM, //MCM 10000K
-	CTHIGHVAL1
-	CTHIGHVAL2
-	CTHIGHVAL3
-	CTHIGHVAL4
-	CTHIGHVAL5	
-	END_SEQ, 0x0000,
-
-};
-
-mDNIe_data_type mDNIe_Gallery[]= 
-{
-	0x0084, 0x0020, //algorithm selection + mcm
-	0x0090, 0x0000, //decontour th.
-	0x0094, 0x0fff, //directional th.
-	0x0098, 0x005c, //simplicity th.
-	0x009c, 0x00f0, //0x01f0 de 15, ce off //0x00f0 de 7, ce off //0x0010 de 0, ce off 
-	0x00ac, 0x0020, //skin detect off, cs 32
-	0x00b4, 0x0100, //de th.
-	0x0120, 0x0064, //MCM 10000K
-	0x0140, 0x8000, //cb VC 0x9300=+19, C 0x8d00=+13, N 0x8000=0, W 0x7300=-13
-	0x0148, 0x0080, //cr VC 0x006d=-19, C 0x0073=-13, N 0x0080=0, W 0x008d=+13
-	0x0134, 0xFFF8, //LSF 248
-=======
 	0x0084, 0x0080,
 	0x0090, 0x0000,
 	0x0094, 0x0fff,
@@ -369,7 +191,6 @@ mDNIe_data_type mDNIe_Gallery[]=
 	0x00D0, 0x00C0,
 	0x0100, 0x0000,
 	0x0084, 0x0040,
->>>>>>> parent of f514d0d... MDNIE from crespo
 	END_SEQ, 0x0000,
 };
 #endif
@@ -1380,7 +1201,7 @@ int mDNIe_txtbuf_to_parsing2(void)
 	pos = 0;
 	memset(dp, 0, l);
     printk("== Before vfs_read ======\n");
-	ret = vfs_read(filp, (char __user *)dp, l, &pos);   // P1_LSJ : DE08 : ?�기??죽음 
+	ret = vfs_read(filp, (char __user *)dp, l, &pos);   // P1_LSJ : DE08 : ?¬ê¸°??ì£½ìŒ 
     printk("== After vfs_read ======\n");
 
 	if(ret != l) 
@@ -1613,3 +1434,4 @@ int s3c_mdnie_stop(void)
 MODULE_AUTHOR("lsi");
 MODULE_DESCRIPTION("S3C MDNIE Device Driver");
 MODULE_LICENSE("GPL");
+

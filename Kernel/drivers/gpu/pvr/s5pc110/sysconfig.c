@@ -109,12 +109,6 @@ static struct clk		*g3d_clock;
 static struct regulator		*g3d_pd_regulator;
 static PVRSRV_ERROR EnableSGXClocks(void)
 {
-<<<<<<< HEAD
-=======
-#ifdef CONFIG_DVFS_LIMIT
-	s5pv210_lock_dvfs_high_level(DVFS_LOCK_TOKEN_PVR, L8); /* 200 MHz */
-#endif
->>>>>>> 7fea5cf... Fix UnderClock and stability issues.
 	regulator_enable(g3d_pd_regulator);
 	clk_enable(g3d_clock);
 =======

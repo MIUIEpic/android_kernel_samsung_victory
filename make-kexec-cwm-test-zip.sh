@@ -19,7 +19,7 @@ if [ ! -f ./Kernel/arch/arm/boot/zImage ]; then
   echo
   exit 255
 fi
-vcp ./Kernel/arch/arm/boot/zImage tools/kexec-cwm-test-zip/
+vcp ./arch/arm/boot/zImage tools/kexec-cwm-test-zip/
 
 if [ ! -f tools/kexec-cwm-test-zip/META-INF/com/google/android/update-binary ]; then
   if [ -f ../../../out/target/product/epicmtd/system/bin/updater ]; then

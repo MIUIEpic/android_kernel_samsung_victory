@@ -71,7 +71,7 @@ TARGET_LOCALE="vzw"
 
 TOOLCHAIN_PREFIX=arm-eabi-
 
-KERNEL_BUILD_DIR=`pwd`/Kernel
+KERNEL_BUILD_DIR=`pwd`/
 
 export PRJROOT=$PWD
 export PROJECT_NAME
@@ -104,7 +104,7 @@ CLEAN_ZIMAGE()
 	echo "************************************************************"
 	echo "* Removing old zImage                                      *"
 	echo "************************************************************"
-	rm -f `pwd`/Kernel/arch/arm/boot/zImage
+	rm -f `pwd`/arch/arm/boot/zImage
 	echo "* zImage removed"
 	echo "************************************************************"
 	echo

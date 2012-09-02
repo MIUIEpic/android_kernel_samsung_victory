@@ -1,0 +1,1 @@
+cmd_drivers/net/wireless/wimax/cmc7xx_sdio.ko := /home/jake/cm7/prebuilt/linux-x86//toolchain/arm-eabi-4.4.3/bin/arm-eabi-ld -EL -r  -T /home/jake/android_kernel_samsung_victory/scripts/module-common.lds --build-id -o drivers/net/wireless/wimax/cmc7xx_sdio.ko drivers/net/wireless/wimax/cmc7xx_sdio.o drivers/net/wireless/wimax/cmc7xx_sdio.mod.o

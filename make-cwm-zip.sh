@@ -12,7 +12,7 @@
 set -e
 
 if [ ! -f ./Kernel/arch/arm/boot/zImage ]; then
-  echo "ERROR: File not found: ./arch/arm/boot/zImage"
+  echo "ERROR: File not found: ./Kernel/arch/arm/boot/zImage"
   echo 
   echo "       Run build_kernel.sh first?"
   echo

@@ -1,1 +1,0 @@
-cmd_sound/soc/s3c24xx/snd-soc-s5p-i2s_sec.o := /home/jake/cm7/prebuilt/linux-x86//toolchain/arm-eabi-4.4.3/bin/arm-eabi-ld -EL    -r -o sound/soc/s3c24xx/snd-soc-s5p-i2s_sec.o sound/soc/s3c24xx/s5p-i2s_sec.o 

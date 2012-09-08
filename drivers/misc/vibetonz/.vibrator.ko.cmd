@@ -1,1 +1,0 @@
-cmd_drivers/misc/vibetonz/vibrator.ko := /home/jake/cm7/prebuilt/linux-x86//toolchain/arm-eabi-4.4.3/bin/arm-eabi-ld -EL -r  -T /home/jake/android_kernel_samsung_victory/scripts/module-common.lds --build-id -o drivers/misc/vibetonz/vibrator.ko drivers/misc/vibetonz/vibrator.o drivers/misc/vibetonz/vibrator.mod.o

@@ -1,1 +1,0 @@
-cmd_drivers/net/wireless/wimaxgpio/wimax_gpio.o := /home/jake/cm7/prebuilt/linux-x86//toolchain/arm-eabi-4.4.3/bin/arm-eabi-ld -EL    -r -o drivers/net/wireless/wimaxgpio/wimax_gpio.o drivers/net/wireless/wimaxgpio/wibrogpio.o drivers/net/wireless/wimaxgpio/wimax_download.o drivers/net/wireless/wimaxgpio/wimax_i2c.o drivers/net/wireless/wimaxgpio/wimaxproc.o 
